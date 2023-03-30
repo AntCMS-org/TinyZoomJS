@@ -51,7 +51,7 @@ class TinyZoom {
         let dragStart, dragged;
         let scaleFactor = 1;
 
-        function canPan() {
+        function isPannable() {
             if (parseInt(canvas.style.width) > (viewportWidth * 0.75) || parseInt(canvas.style.height) > (viewportHeight * 0.75)) {
                 return true;
             } else {
@@ -66,7 +66,7 @@ class TinyZoom {
             canvas.style.width = `${newWidth}px`;
             canvas.style.height = `${newHeight}px`;
 
-            redraw(canPan());
+            redraw(isPannable());
         }
 
         function redraw(restore = true) {
@@ -99,7 +99,7 @@ class TinyZoom {
             lastX = event.offsetX || event.layerX;
             lastY = event.offsetY || event.layerY;
             dragged = true;
-            if (dragStart && canPan()) {
+            if (dragStart && isPannable()) {
                 const pt = ctx.transformedPoint(lastX, lastY);
                 ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
                 redraw();
