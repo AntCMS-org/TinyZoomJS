@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>TinyZoomJS Test Page</title>
+    <script src="TinyZoom.js"></script>
+
+    <style>
+        .fullscreen-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+
+<body>
+    <img src="https://picsum.photos/seed/picsum/512/512" class="TinyZoom">
+    <img src="https://picsum.photos/200" class="TinyZoom">
+    <img src="https://picsum.photos/1024" class="TinyZoom">
+    <img src="https://picsum.photos/2048" class="TinyZoom">
+</body>
+
+</html>
