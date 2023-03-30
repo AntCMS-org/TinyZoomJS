@@ -51,22 +51,34 @@ class TinyZoom {
         let dragStart, dragged;
         let scaleFactor = 1;
 
+        function canPan() {
+            if (parseInt(canvas.style.width) > (viewportWidth * 0.75) || parseInt(canvas.style.height) > (viewportHeight * 0.75)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         function zoom(scale) {
             scaleFactor *= scale;
             const newWidth = canvas.width * scaleFactor;
             const newHeight = canvas.height * scaleFactor;
             canvas.style.width = `${newWidth}px`;
             canvas.style.height = `${newHeight}px`;
-            redraw();
+
+            redraw(canPan());
         }
 
-        function redraw() {
+        function redraw(restore = true) {
             ctx.save();
 
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.restore();
+            if (restore) {
+                ctx.restore();
+            }
+
             ctx.drawImage(image, 0, 0);
         }
 
@@ -87,7 +99,7 @@ class TinyZoom {
             lastX = event.offsetX || event.layerX;
             lastY = event.offsetY || event.layerY;
             dragged = true;
-            if (dragStart) {
+            if (dragStart && canPan()) {
                 const pt = ctx.transformedPoint(lastX, lastY);
                 ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
                 redraw();
@@ -113,7 +125,6 @@ class TinyZoom {
         if (overScale != 1) {
             zoom(overScale);
         }
-
     }
 }
 
