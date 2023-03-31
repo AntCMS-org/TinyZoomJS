@@ -7,7 +7,7 @@ class TinyZoom {
                 this.makeFullscreen(image);
             });
 
-            image.addEventListener("touchend", (event) => {
+            image.addEventListener("touchstart", (event) => {
                 event.preventDefault();
                 this.makeFullscreen(image);
             });
@@ -69,9 +69,9 @@ class TinyZoom {
 
         // Set the position of the canvas to absolute
         canvas.style.position = 'absolute';
-        canvas.style.position = 'absolute';
         canvas.style.left = (viewportWidth / 2) - (image.width / 2) + 'px';
         canvas.style.top = (viewportHeight / 2) - (image.height / 2) + 'px';
+        canvas.style.cursor = 'move';
 
         canvas.addEventListener('wheel', (event) => {
             event.preventDefault();
@@ -113,6 +113,6 @@ class TinyZoom {
 }
 
 // Use the library
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
     new TinyZoom(".TinyZoom");
 });
