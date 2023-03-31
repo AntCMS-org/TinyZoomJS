@@ -3,6 +3,7 @@ class TinyZoom {
         const images = document.querySelectorAll(selector);
 
         images.forEach((image) => {
+            image.style.cursor = 'pointer';
             image.addEventListener("click", () => {
                 this.makeFullscreen(image);
             });
