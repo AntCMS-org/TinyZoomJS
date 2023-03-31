@@ -24,7 +24,7 @@ class TinyZoom {
         canvas.width = image.width;
         canvas.height = image.height;
 
-        ctx.drawImage(image, 0, 0);
+        ctx.drawImage(image, 0, 0, image.width, image.height);
 
         // If the image is too large for the screen, scale it to fit
         var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -47,17 +47,8 @@ class TinyZoom {
             }
         });
 
-        let lastX, lastY;
-        let dragStart, dragged;
+        let dragStartX, dragStartY, dragged;
         let scaleFactor = 1;
-
-        function isPannable() {
-            if (parseInt(canvas.style.width) > (viewportWidth * 0.75) || parseInt(canvas.style.height) > (viewportHeight * 0.75)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
 
         function zoom(scale) {
             scaleFactor *= scale;
@@ -66,21 +57,18 @@ class TinyZoom {
             canvas.style.width = `${newWidth}px`;
             canvas.style.height = `${newHeight}px`;
 
-            redraw(isPannable());
+            redraw();
         }
 
-        function redraw(restore = true) {
-            ctx.save();
-
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
+        function redraw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (restore) {
-                ctx.restore();
-            }
-
-            ctx.drawImage(image, 0, 0);
+            ctx.drawImage(image, 0, 0, image.width, image.height);
         }
+
+        // Set the position of the canvas to absolute
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
 
         canvas.addEventListener('wheel', (event) => {
             event.preventDefault();
@@ -89,37 +77,30 @@ class TinyZoom {
         });
 
         canvas.addEventListener('mousedown', (event) => {
-            lastX = event.offsetX || event.layerX;
-            lastY = event.offsetY || event.layerY;
-            dragStart = ctx.transformedPoint(lastX, lastY);
-            dragged = false;
+            dragStartX = event.clientX - parseInt(canvas.style.left);
+            dragStartY = event.clientY - parseInt(canvas.style.top);
+            dragged = true;
         });
 
         canvas.addEventListener('mousemove', (event) => {
-            lastX = event.offsetX || event.layerX;
-            lastY = event.offsetY || event.layerY;
-            dragged = true;
-            if (dragStart && isPannable()) {
-                const pt = ctx.transformedPoint(lastX, lastY);
-                ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
-                redraw();
+            if (dragged) {
+                // Calculate the new position of the element
+                const x = event.clientX - dragStartX;
+                const y = event.clientY - dragStartY;
+
+                // Set the position of the element
+                canvas.style.left = `${x}px`;
+                canvas.style.top = `${y}px`;
             }
         });
 
         canvas.addEventListener('mouseup', () => {
-            dragStart = null;
+            dragged = false;
         });
 
         canvas.addEventListener('dblclick', (event) => {
             zoom(event.shiftKey ? 0.5 : 2);
         });
-
-        ctx.transformedPoint = (x, y) => {
-            const pt = new DOMPoint(lastX, lastY);
-            pt.x = x;
-            pt.y = y;
-            return pt.matrixTransform(ctx.getTransform().inverse());
-        };
 
         var overScale = Math.min(1.0, overscaleWidth, overscaleHeight);
         if (overScale != 1) {
