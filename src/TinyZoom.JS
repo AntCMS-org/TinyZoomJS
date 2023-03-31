@@ -47,16 +47,18 @@ class TinyZoom {
             }
         });
 
+        fullscreen.addEventListener('wheel', (event) => {
+            if (event.target === fullscreen) {
+                event.preventDefault();
+            }
+        });
+
         let dragStartX, dragStartY, dragged;
         let scaleFactor = 1;
 
         function zoom(scale) {
             scaleFactor *= scale;
-            const newWidth = canvas.width * scaleFactor;
-            const newHeight = canvas.height * scaleFactor;
-            canvas.style.width = `${newWidth}px`;
-            canvas.style.height = `${newHeight}px`;
-
+            canvas.style.transform = `scale(${scaleFactor})`;
             redraw();
         }
 
@@ -67,8 +69,9 @@ class TinyZoom {
 
         // Set the position of the canvas to absolute
         canvas.style.position = 'absolute';
-        canvas.style.top = '0';
-        canvas.style.left = '0';
+        canvas.style.position = 'absolute';
+        canvas.style.left = (viewportWidth / 2) - (image.width / 2) + 'px';
+        canvas.style.top = (viewportHeight / 2) - (image.height / 2) + 'px';
 
         canvas.addEventListener('wheel', (event) => {
             event.preventDefault();
@@ -77,16 +80,16 @@ class TinyZoom {
         });
 
         canvas.addEventListener('mousedown', (event) => {
-            dragStartX = event.clientX - parseInt(canvas.style.left);
-            dragStartY = event.clientY - parseInt(canvas.style.top);
+            dragStartX = event.pageX - canvas.offsetLeft;
+            dragStartY = event.pageY - canvas.offsetTop;
             dragged = true;
         });
 
         canvas.addEventListener('mousemove', (event) => {
             if (dragged) {
                 // Calculate the new position of the element
-                const x = event.clientX - dragStartX;
-                const y = event.clientY - dragStartY;
+                const x = event.pageX - dragStartX;
+                const y = event.pageY - dragStartY;
 
                 // Set the position of the element
                 canvas.style.left = `${x}px`;
