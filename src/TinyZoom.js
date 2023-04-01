@@ -25,6 +25,8 @@ class TinyZoom {
         let dragStartX, dragStartY, dragged;
         let scaleFactor = window.devicePixelRatio || 1;
 
+        let isLandscape = screen.orientation.type.startsWith("portrait") ? false : true;
+
         canvas.style.maxWidth = '85%';
         canvas.style.maxHeight = '85%';
         canvas.width = image.width * scaleFactor;
@@ -37,8 +39,16 @@ class TinyZoom {
         var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
         var viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-        var overscaleWidth = (image.width > viewportWidth) ? (viewportWidth / image.width) * 0.75 : 1;
-        var overscaleHeight = (image.height > viewportHeight) ? (viewportHeight / image.height) * 0.75 : 1;
+        /*if (isLandscape) {
+            var overscaleWidth = (image.width * 1.1 > viewportWidth) ? (viewportWidth / image.width) * 0.90 : 1;
+            var overscaleHeight = (image.height * 1.1 > viewportHeight) ? (viewportHeight / image.height) * 0.90 : 1;
+        } else {
+            var overscaleWidth = (image.height * 1.1 > viewportHeight) ? (viewportHeight / image.height) * 0.90 : 1;
+            var overscaleHeight = (image.width * 1.1 > viewportWidth) ? (viewportWidth / image.width) * 0.90 : 1;
+        }*/
+
+        var overscaleWidth = (image.width * 1.1 > viewportWidth) ? (viewportWidth / image.width) * 0.90 : 1;
+        var overscaleHeight = (image.height * 1.1 > viewportHeight) ? (viewportHeight / image.height) * 0.90 : 1;
 
         fullscreen.appendChild(canvas);
         document.body.appendChild(fullscreen);
@@ -106,7 +116,10 @@ class TinyZoom {
 
         var overScale = Math.min(1.0, overscaleWidth, overscaleHeight);
         if (overScale != 1) {
-            zoom(overScale);
+            scaleFactor = overScale;
+            canvas.style.left = (viewportWidth / 2) - ((image.width * scaleFactor) / 2) + 'px';
+            canvas.style.top = (viewportHeight / 2) - ((image.height * scaleFactor) / 2) + 'px';
+            zoom(1);
         }
     }
 }
