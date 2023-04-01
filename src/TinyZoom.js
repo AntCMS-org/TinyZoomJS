@@ -22,22 +22,23 @@ class TinyZoom {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
-        canvas.width = image.width;
-        canvas.height = image.height;
+        let dragStartX, dragStartY, dragged;
+        let scaleFactor = window.devicePixelRatio || 1;
 
+        canvas.style.maxWidth = '85%';
+        canvas.style.maxHeight = '85%';
+        canvas.width = image.width * scaleFactor;
+        canvas.height = image.height * scaleFactor;
+
+        ctx.scale(scaleFactor, scaleFactor);
         ctx.drawImage(image, 0, 0, image.width, image.height);
 
         // If the image is too large for the screen, scale it to fit
         var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
         var viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-        if (viewportWidth > 0) {
-            var overscaleWidth = (image.width > viewportWidth) ? (viewportWidth / image.width) * 0.75 : 1;
-        }
-
-        if (viewportHeight > 0) {
-            var overscaleHeight = (image.height > viewportHeight) ? (viewportHeight / image.height) * 0.75 : 1;
-        }
+        var overscaleWidth = (image.width > viewportWidth) ? (viewportWidth / image.width) * 0.75 : 1;
+        var overscaleHeight = (image.height > viewportHeight) ? (viewportHeight / image.height) * 0.75 : 1;
 
         fullscreen.appendChild(canvas);
         document.body.appendChild(fullscreen);
@@ -54,9 +55,6 @@ class TinyZoom {
             }
         });
 
-        let dragStartX, dragStartY, dragged;
-        let scaleFactor = 1;
-
         function zoom(scale) {
             scaleFactor *= scale;
             canvas.style.transform = `scale(${scaleFactor})`;
@@ -69,7 +67,7 @@ class TinyZoom {
         }
 
         // Set the position of the canvas to absolute
-        canvas.style.position = 'absolute';
+        canvas.style.position = 'fixed';
         canvas.style.left = (viewportWidth / 2) - (image.width / 2) + 'px';
         canvas.style.top = (viewportHeight / 2) - (image.height / 2) + 'px';
         canvas.style.cursor = 'move';
