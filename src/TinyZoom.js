@@ -1,8 +1,6 @@
 class TinyZoom {
     constructor(selector) {
-        const images = document.querySelectorAll(selector);
-
-        images.forEach(image => {
+        document.querySelectorAll(selector).forEach(image => {
             image.style.cursor = 'pointer';
             image.addEventListener('click', () => this.makeFullscreen(image));
         });
@@ -49,6 +47,7 @@ class TinyZoom {
         let dragStartX, dragStartY, dragged = false;
 
         canvas.addEventListener('mousedown', (event) => {
+            event.preventDefault()
             dragStartX = event.pageX - canvas.offsetLeft;
             dragStartY = event.pageY - canvas.offsetTop;
             dragged = true;
@@ -72,8 +71,9 @@ class TinyZoom {
             zoom(event.deltaY > 0 ? 0.9 : 1.1);
         });
 
-        canvas.addEventListener('dblclick', () => {
-            zoom(2);
+        canvas.addEventListener('dblclick', (event) => {
+            event.preventDefault();
+            zoom(event.shiftKey ? 0.5 : 2);
         });
 
         fullscreen.addEventListener('click', (event) => {
