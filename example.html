@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>TinyZoomJS Test Page</title>
-    <script src="TinyZoom.js"></script>
+    <title>TinyZoomJS Example Page</title>
+    <script src="src/TinyZoom.js" defer></script>
 
     <style>
         .fullscreen-image {
@@ -27,7 +27,12 @@
     <img src="https://picsum.photos/seed/picsum/512/512" class="TinyZoom">
     <img src="https://picsum.photos/200" class="TinyZoom">
     <img src="https://picsum.photos/1024" class="TinyZoom">
-    <img src="https://picsum.photos/2048" class="TinyZoom">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            new TinyZoom(".TinyZoom");
+        });
+    </script>
 </body>
 
 </html>
