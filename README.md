@@ -6,8 +6,8 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/vanilla-JS-no_dependencies-2ea44f" alt="Vanilla JS, no dependencies">
-  <img src="https://img.shields.io/badge/size-3.4_KB-blue" alt="3.4 KB">
+  <img src="https://img.shields.io/badge/Vanilla_JS-No_Dependencies-green" alt="Vanilla JS, no dependencies">
+  <img src="https://img.shields.io/badge/size-3.5_KB-blue" alt="3.5 KB">
 </p>
 
 ---
